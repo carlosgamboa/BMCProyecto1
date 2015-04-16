@@ -39,22 +39,16 @@ json_t *get_json_obj(char file_location[]) {
   return root;
 }
 
-char **get_json_array_values(json_t *json, char key[]) {
-  json_t *data;
-  static char **string_array;
+void get_json_array_values(json_t *json, size_t col_size, char string_array[col_size][255]) {
+  json_t *data, *inner_json;
   int i;
-  data = json_object_get(json, key);
 
-  for(i = 0; i < json_is_array(data); i++) {
-    char *string_section ="";
-    json_t *section_in_json;
+  for(i = 0; i < json_array_size(json) && (inner_json = json_array_get(json, i)); i++) {
+    char *string_section;
 
-    section_in_json = json_array_get(data, i);
-    string_section = strndup(json_string_value(section_in_json), BUFFER_SIZE);
-    strcpy(string_array[i], string_section);
+    string_section = strndup(json_string_value(inner_json), BUFFER_SIZE);
+    strcpy(string_array[i], json_string_value(inner_json));
   }
-
-  return string_array;
 }
 
 char *get_json_root_data(json_t *json, char key[]) {
@@ -67,13 +61,21 @@ char *get_json_root_data(json_t *json, char key[]) {
 }
 
 int main() {
-  char **value;
-  json_t *json;
+  int col_val = 3;
+  json_t *json, *array_json;
+  int i = 0;
 
   json = get_json_obj("json_test.json");
-  value = get_json_array_values(json, "col");
+  array_json = json_object_get(json, "col");
 
-  printf("json key1 value: %zu\n", sizeof(value));
+  size_t elements_count = json_array_size(array_json); 
+  char value[elements_count][255];
+  get_json_array_values(array_json, elements_count, value);
+
+  for(i = 0; i < elements_count; i++) {
+    printf("values for col: %s\n", value[i]);
+  }
+
   return 0;
 }
 
