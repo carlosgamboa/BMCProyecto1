@@ -179,6 +179,10 @@ void include_new_row(ChData *data) {
   int gene1_column_index, gene2_column_index;
   double frecuency_value_in_array = 0.00;
 
+  if (column_array_size == 0){
+    init_matrix();
+  }
+
   gene1 = gtk_entry_get_text(GTK_ENTRY(data->txt_gene1));
   gene2 = gtk_entry_get_text(GTK_ENTRY(data->txt_gene2));
   frecuency_value = gtk_spin_button_get_value(GTK_SPIN_BUTTON(data->sp_frecuency));
@@ -232,7 +236,7 @@ void btn_add_clicked(GtkButton *button, ChData *data) {
   gtk_statusbar_push(status_bar, context_id, "FRECUENCY ADDED");
 }
 
-void mbtn_save_activate_cb(GtkMenuItem *menuitem, ChData *user_data) {
+void btn_save_clicked_cb(GtkButton *button, ChData *user_data) {
   guint context_id;
   GtkStatusbar *status_bar;
   GtkWidget *dialog;
@@ -263,7 +267,7 @@ void mbtn_save_activate_cb(GtkMenuItem *menuitem, ChData *user_data) {
   gtk_widget_destroy (dialog);
 }
 
-void mbtn_open_activate_cb(GtkMenuItem *menuitem, ChData *app) {
+void btn_open_clicked_cb(GtkButton *button, ChData *app) {
   gint res;
   GtkWindow *window;
   GtkWidget *dialog;

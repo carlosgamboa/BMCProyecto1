@@ -36,10 +36,7 @@ int main(int argc, char *argv[]) {
 	FillChromosomes();
 
   data = g_slice_new(ChData);
-  data->matrix = g_slice_new(GenMatrix);
-  data->id = 2;
-  data->matrix->column_array_size = 0;
-  data->matrix->matrix_size = 0;
+
   /* Get object from UI */
 #define GW(name) CH_GET_WIDGET(builder, name, data)
 	GW(main_window);
@@ -48,8 +45,8 @@ int main(int argc, char *argv[]) {
 	GW(txt_gene1);
 	GW(txt_gene2);
 	GW(sp_frecuency);
-	GW(mbtn_save);
-	GW(mbtn_open);
+	GW(btn_save);
+	GW(btn_open);
 	GW(drawingarea);
 	GW(btn_zoomReset);
 	GW(btn_zoomIn);
