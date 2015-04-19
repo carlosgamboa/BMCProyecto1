@@ -1,7 +1,7 @@
 /*
  * Algoritmo Genera las secuencia cromosomica con la distancia de los genes.
  * Si van a probarlo con una matrix mas grande solo se debe modificar las variables y constantes. 
- * En este caso SIZE,numGenes no se necesita modificar otros. Recuerden llenar la matriz con los valores de prueba
+ * En este caso SIZE,nodos no se necesita modificar otros. Recuerden llenar la matriz con los valores de prueba
  * (-1 significa espacio Nulo)
  * @garias
  * */
@@ -14,7 +14,7 @@
 
 int last,first;
 double maximo;
-int numGenes =4;
+//int nodos =4;
 
 /*esta matrix se deja asi de inicio
  * Esta matriz es solo una forma de almacenar la cadena de path
@@ -28,7 +28,7 @@ double matrix[SIZE][SIZE];
 
 int init_allMatrix();
 int min(int,int);
-void printMatrix_double(double m[SIZE][SIZE]);
+void printMatrix_double(double m[SIZE][SIZE],int nodos);
 void printMatrix_int(int p[SIZE][SIZE]);
 int findFirst(double m[SIZE][SIZE],int nodos);
 int findNext(double m[SIZE][SIZE], int row,int nodos);
@@ -202,7 +202,7 @@ void makePath(double values[SIZE][SIZE],double c[SIZE][SIZE],int p[SIZE][SIZE],d
 			if (min_r!=GHOST)
 			{	
 				remainRow(m,row_path,nodos,min_r);
-				makeZeroRows(matrix,numGenes);
+				makeZeroRows(matrix,nodos);
 			}	
 			else
 				break;
@@ -240,25 +240,25 @@ void getMutltipleMaps(double values[SIZE][SIZE],double c[SIZE][SIZE],double m[SI
 	
 	while (T_step<nodos)
 	{
-		findFirst(m,numGenes);
+		findFirst(m,nodos);
 		printf("m[%d][%d]=%f\n",first,last,maximo);
-		deleteFistC(m,first,numGenes);
-		makeZeroRows(m,numGenes);
+		deleteFistC(m,first,nodos);
+		makeZeroRows(m,nodos);
 		
-		makePath(values,c,path,m,first,T_step,numGenes);
+		makePath(values,c,path,m,first,T_step,nodos);
 		T_step++;
 		
 		printf("\n");
 		printf("--------------MATRIX DE PATHS------------\n");
 		printf("--------------- [%d ---> %d]--------------\n",first,last);
-		printMatrix_double(matrix);
+		printMatrix_double(matrix,nodos);
 	}
 	
 }
 
 //cuento si me faltan genes de meter en el path. Si no hay libres se termina
 
-void printMatrix_double(double m[SIZE][SIZE])
+void printMatrix_double(double m[SIZE][SIZE],int nodos)
 {
 	int i,j;
 	printf("----------------------------------------\n");
@@ -299,7 +299,7 @@ void create_all_maps(double values[SIZE][SIZE],int nodes)
 	
 	printf("\n");
 	printf("--------------MATRIX DE PATHS------------\n");
-	getMutltipleMaps(values,cost,matrix,numGenes);
+	getMutltipleMaps(values,cost,matrix,nodos);
 }
 #endif
 
