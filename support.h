@@ -39,18 +39,16 @@ struct _ChData {
   GtkWidget *btnmi_save;
   GtkWidget *btnmi_open;
   GenMatrix *matrix;
-};
-
-typedef struct _DrData DrData;
-
-struct _DrData {
-  int id;
-  GtkWidget *result_window;
   GtkWidget *drawingarea;
   GtkWidget *btn_zoomReset;
   GtkWidget *btn_zoomIn;
   GtkWidget *btn_zoomOut;
+	GtkWidget *btn_up;
+	GtkWidget *btn_down;
+	GtkWidget *btn_left;
+	GtkWidget *btn_right;
 };
+
 
 typedef struct _Color Color;
 struct _Color
@@ -65,6 +63,8 @@ struct _GeneData {
     int distance;
     Color color;
 };
+
+void FillChromosomes();
 
 #endif
 

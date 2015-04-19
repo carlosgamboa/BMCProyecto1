@@ -10,7 +10,7 @@ enum {
   N_COLUMNS
 };
 
-#define SCREEN_MOVE 10
+#define SCREEN_MOVE 20
 
 float scale = 1.0;
 float xtranslate, ytranslate = 0;
@@ -311,25 +311,25 @@ Color getColor()
     return color;
 }
 
-void Refreh(DrData *data)
+void Refreh(ChData *data)
 {
     gtk_widget_queue_draw (data->drawingarea);
 }
 
-void on_button_zoomReset_clicked ( GtkButton *button , DrData *data)
+void on_button_zoomReset_clicked ( GtkButton *button , ChData *data)
 {
     scale = 1;
     xtranslate = ytranslate = 0;
     Refreh(data);
 }
 
-void on_button_zoomIn_clicked ( GtkButton *button , DrData *data)
+void on_button_zoomIn_clicked ( GtkButton *button , ChData *data)
 {
     scale += 0.1;
     Refreh(data);
 }
 
-void on_button_zoomOut_clicked ( GtkButton *button , DrData *data)
+void on_button_zoomOut_clicked ( GtkButton *button , ChData *data)
 {
     scale -= 0.1;
     if (scale < 0)
@@ -337,30 +337,27 @@ void on_button_zoomOut_clicked ( GtkButton *button , DrData *data)
     Refreh(data);
 }
 
-void on_key_press_event (GtkWidget *widget,
-               GdkEventKey  *event,
-               DrData *data)
+void on_left_event ( GtkButton *button , ChData *data)
 {
+	xtranslate += SCREEN_MOVE;
+	Refreh(data);
+}
 
-    if (event->keyval == GDK_KEY_Left)
-    {
-        xtranslate += SCREEN_MOVE;
-    }
+void on_right_event ( GtkButton *button , ChData *data)
+{
+    xtranslate -= SCREEN_MOVE;
+	Refreh(data);
+}
 
-    if (event->keyval == GDK_KEY_Right)
-    {
-       xtranslate -= SCREEN_MOVE;
-    }
+void on_up_event ( GtkButton *button , ChData *data)
+{
+    ytranslate += SCREEN_MOVE;
+	Refreh(data);
+}
 
-    if (event->keyval == GDK_KEY_Up)
-    {
-        ytranslate += SCREEN_MOVE;
-    }
-
-    if (event->keyval == GDK_KEY_Down)
-    {
-        ytranslate -= SCREEN_MOVE;
-    }
+void on_down_event ( GtkButton *button , ChData *data)
+{
+    ytranslate -= SCREEN_MOVE;
     Refreh(data);
 }
 

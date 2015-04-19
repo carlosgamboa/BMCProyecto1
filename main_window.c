@@ -8,47 +8,6 @@
 
 #define UI_FILE "new_main.glade"
 
-void CreateDrawWindow()
-{
-    DrData *data;
-    GtkBuilder *builder;
-    GError     *error = NULL;
-    /* Create new GtkBuilder object */
-    builder = gtk_builder_new();
-    /* Load UI from file. If error occurs, report it and quit application.
-     * Replace "tut.glade" with your saved project. */
-    if( ! gtk_builder_add_from_file( builder, "drawing_window.glade", &error ) )
-    {
-        g_warning( "%s", error->message );
-        g_free( error );
-        return;
-    }
-
-    data = g_slice_new(DrData);
-
-#define GW(name) CH_GET_WIDGET(builder, name, data)
-    //GW(result_window);
-    GW(drawingarea);
-    GW(btn_zoomReset);
-    GW(btn_zoomIn);
-    GW(btn_zoomOut);
-#undef GW
-
-    /* Connect signals */
-    gtk_builder_connect_signals( builder, data );
-
-    /* Destroy builder, since we don't need it anymore */
-    g_object_unref( G_OBJECT( builder ) );
-
-
-    /* Show window. All other widgets are automatically shown by GtkBuilder */
-    //gtk_widget_show( data->result_window );
-
-    /* Start main loop */
-    //gtk_main();
-
-    g_slice_free(DrData, data);
-}
 
 void create_list(ChData *data) {
   GtkListStore *list_store;
@@ -75,7 +34,6 @@ int main(int argc, char *argv[]) {
   }
 
 	FillChromosomes();
-    CreateDrawWindow();
 
   data = g_slice_new(ChData);
   data->matrix = g_slice_new(GenMatrix);
@@ -84,14 +42,22 @@ int main(int argc, char *argv[]) {
   data->matrix->matrix_size = 0;
   /* Get object from UI */
 #define GW(name) CH_GET_WIDGET(builder, name, data)
-  GW(main_window);
-  GW(tree_view);
-  GW(btn_add);
-  GW(txt_gene1);
-  GW(txt_gene2);
-  GW(sp_frecuency);
-  GW(btnmi_save);
-  GW(btnmi_open);
+	GW(main_window);
+	GW(tree_view);
+	GW(btn_add);
+	GW(txt_gene1);
+	GW(txt_gene2);
+	GW(sp_frecuency);
+	GW(btnmi_save);
+	GW(btnmi_open);
+	GW(drawingarea);
+	GW(btn_zoomReset);
+	GW(btn_zoomIn);
+	GW(btn_zoomOut);
+	GW(btn_up);
+	GW(btn_down);
+	GW(btn_left);
+	GW(btn_right);
 #undef GW
 
   gtk_builder_connect_signals(builder, data);
