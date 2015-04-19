@@ -6,11 +6,11 @@
  * @garias
  * */
 #include<stdio.h>
-#define SIZE 5
+#define SIZE 8
 #define GHOST 999
 
 int last,first;
-int numGenes = 5;
+int numGenes = 8;
 
 /*esta matrix se deja asi de inicio
  * Esta matriz es solo una forma de almacenar la cadena de path
@@ -18,26 +18,32 @@ int numGenes = 5;
  * Horizontal en el row 0 y asi ..
  * */
 int path[SIZE][SIZE]= { 
-	   {-1,-1,-1,-1,-1},
-	   {-1,-1,-1,-1,-1}, 
-	   {-1,-1,-1,-1,-1}, 
-	   {1,-1,-1,-1,-1},
-	   {-1,-1,-1,-1,-1},
+	   {-1,-1,-1,-1,-1,-1,-1,-1},
+	   {-1,-1,-1,-1,-1,-1,-1,-1}, 
+	   {-1,-1,-1,-1,-1,-1,-1,-1}, 
+	   {1,-1,-1,-1,-1,-1,-1,-1},
+	   {-1,-1,-1,-1,-1,-1,-1,-1},
+	   {-1,-1,-1,-1,-1,-1,-1,-1},
+	   {-1,-1,-1,-1,-1,-1,-1,-1},
+	   {-1,-1,-1,-1,-1,-1,-1,-1},
 	   };
 	   
 /*esta es para probar los pesos*/	   
 int matrix[SIZE][SIZE]= { 
-	   {-1,33,429,11,343},
-	   {33,-1,241,321,4}, 
-	   {429,241,-1,421,178}, 
-	   {11,321,421,-1,328},
-	   {343,4,178,328,-1},
+	   {-1 ,15 ,2  ,13 ,5  ,5  ,3  ,23},
+	   {-1 ,-1 ,-1 ,-1 ,-1 ,-1 ,-1 ,-1}, 
+	   {2  ,13 ,-1 ,11 ,3  ,3  ,1  ,18}, 
+	   {13 ,2  ,11 ,-1 ,14 ,12 ,10 ,10},
+	   {-1 ,-1 ,-1 ,-1 ,-1 ,-1 ,-1 ,-1},
+	   {5  ,10 ,3  ,8  ,6  ,-1 ,4  ,18},
+	   {3  ,14 ,1  ,12 ,5  ,5  ,-1 ,22},
+	   {-1 ,-1 ,-1 ,-1 ,-1 ,-1 ,-1 ,-1},
 	   };
 
 int init_allMatrix();
 int min(int,int);
 void printMatrix(int m[SIZE][SIZE]);
-int findInit(int m[SIZE][SIZE]);
+int findFirst(int m[SIZE][SIZE]);
 int findNext(int m[SIZE][SIZE], int row,int nodos);
 int findMinRow(int m[SIZE][SIZE],int r,int nodos);
 void remainRow(int m[SIZE][SIZE],int r,int nodos,int min);
@@ -46,6 +52,8 @@ int findMinRow(int m[SIZE][SIZE],int r,int nodos);
 void makeZeroRows(int m[SIZE][SIZE],int nodos);
 void makePath(int p[SIZE][SIZE],int m[SIZE][SIZE],int row_path, int mT,int nodos);
 void deleteFistC(int m[SIZE][SIZE], int c,int nodos);
+int havePaths(int m[SIZE][SIZE],int nodos);
+void getMutltipleMaps(int m[SIZE][SIZE],int nodos);
 
 int init_allMatrix()
 {
@@ -63,7 +71,7 @@ int init_allMatrix()
  * Busca el peso mayor entre dos genes
  * Inicializa 
  * */
-int findInit(int m[SIZE][SIZE])
+int findFirst(int m[SIZE][SIZE])
 {
 	int c,r;
 	int first =0;
@@ -168,13 +176,12 @@ void makeZeroRows(int m[SIZE][SIZE],int nodos)
  * mT es el numero de la interaccion de la matriz o del paso, tambien
  * uno de los indices de la matrix path para ir escribiendo el path
  * */
-void makePath(int p[SIZE][SIZE],int m[SIZE][SIZE],int row_path, int mT,int nodos)
+void makePath(int p[SIZE][SIZE],int m[SIZE][SIZE],int row_path,int T_step,int nodos)
 {
 	int next,min_r;
-	int flag=1;
-	mT=0;
-	p[0][mT]=row_path;
-	while(flag)
+	int mT=0;
+	p[T_step][mT]=row_path;
+	while(1==1)
 	{
 		//busca el proximo
 		next=findNext(m,row_path,nodos);
@@ -190,21 +197,64 @@ void makePath(int p[SIZE][SIZE],int m[SIZE][SIZE],int row_path, int mT,int nodos
 			}	
 			else
 				break;
-				/*esto falta a que modifique varias rutas
-				aun estoy viendo como encontrar la variable de parada
-				*/
 		}
 		else
 		{
 			printf("next %d \n",next);
 			mT++;
-			p[0][mT]=next;
+			p[T_step][mT]=next;
 			row_path = next;
-			printf("\n");
-			printf("--------------MATRIX DE PATHS------------\n");
-			printMatrix(p);
 		}
 	}	
+}
+
+/*
+ * Solo hay paths cuando hay un valor en la matrix
+ * Cuando termina los mapas la matrix resultante solo tiene valores nulos
+ * */
+int havePaths(int m[SIZE][SIZE],int nodos)
+{
+	int r,c;
+	for(r=0;r<nodos;r++)
+	{
+		for(c=0;c<nodos;c++)
+		{
+			if (m[r][c]!=-1)
+				return 1;
+		}
+	}
+	return 0;
+}
+
+/*
+ * Se Utiliza desde el comienzo para eliminar de la matriz el nodo first 
+ * para no volver a pasar en el path
+ * */
+void deleteFistC(int m[SIZE][SIZE], int c,int nodos)
+{
+	int i;
+	 for(i=0; i<nodos; i++)
+		m[i][c]=-1;//elimino la columna init
+	
+}
+ 
+
+void getMutltipleMaps(int m[SIZE][SIZE],int nodos)
+{
+	int T_step = 0;
+	
+	while ((havePaths)&&(T_step<5))
+	{
+		findFirst(matrix);
+		deleteFistC(matrix,first,numGenes);
+		
+		makeZeroRows(matrix,numGenes);
+		printf("First: %d ---> last: %d\n",first,last);
+		
+		makePath(path,matrix,first,T_step,numGenes);
+		T_step++;
+	}
+	
 }
 
 //cuento si me faltan genes de meter en el path. Si no hay libres se termina
@@ -226,39 +276,17 @@ void printMatrix(int m[SIZE][SIZE])
 	printf("----------------------------------------\n");
 }
 
-/*
- * Se Utiliza desde el comienzo para eliminar de la matriz el nodo first 
- * para no volver a pasar en el path
- * */
-void deleteFistC(int m[SIZE][SIZE], int c,int nodos)
-{
-	int i;
-	 for(i=0; i<nodos; i++)
-		m[i][c]=-1;//elimino la columna init
-	
-}
- 
+
 int main ()
 {
 	
    //init_allMatrix();
- 
+    
+	getMutltipleMaps(matrix,numGenes);
+    
 	printf("\n");
-	printf("Numero de genes %d \n",numGenes);
-	printf("--------------MATRIX DE GENES------------\n");
-    printMatrix(matrix);
-    
-    findInit(matrix);
-    printf("%d ---> %d\n",first,last);
-    
-    makeZeroRows(matrix,numGenes);
-    deleteFistC(matrix,first,numGenes);
-	printf("--------------MATRIX DE GENES------------\n");
-    printMatrix(matrix);
-    
-    makePath(path,matrix,first,0,numGenes);
- 
- 
+	printf("--------------MATRIX DE PATHS------------\n");
+	printMatrix(path);
     
    return 0;
 }
