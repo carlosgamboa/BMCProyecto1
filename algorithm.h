@@ -71,6 +71,7 @@ void fill_Matrix(double values[SIZE][SIZE],int nodos)
 
 /*
  * Busca el peso mayor entre dos genes
+ * 
  * Inicializa 
  * */
 int findFirst(double m[SIZE][SIZE],int nodos)
