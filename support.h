@@ -34,6 +34,8 @@ struct _ChData {
   GtkWidget *txt_gene1;
   GtkWidget *txt_gene2;
   GtkWidget *sp_frecuency;
+  GtkWidget *btn_save;
+  GtkWidget *btn_open;
   GenMatrix *matrix;
 };
 
