@@ -2,12 +2,18 @@
 <!-- Generated with glade 3.16.1 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
+  <object class="GtkAdjustment" id="sp_frecuency_adjustment">
+    <property name="upper">100</property>
+    <property name="step_increment">0.01</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="default_width">1200</property>
     <property name="default_height">800</property>
+    <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
@@ -27,21 +33,14 @@
                   <object class="GtkMenuItem" id="menuitem1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">_File</property>
+                    <property name="use_underline">True</property>
                     <child type="submenu">
                       <object class="GtkMenu" id="menu1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkImageMenuItem" id="imagemenuitem1">
-                            <property name="label">gtk-new</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="use_stock">True</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkImageMenuItem" id="btnmi_open">
+                          <object class="GtkImageMenuItem" id="mbtn_open">
                             <property name="label">gtk-open</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -50,7 +49,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkImageMenuItem" id="btnmi_save">
+                          <object class="GtkImageMenuItem" id="mbtn_save">
                             <property name="label">gtk-save</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -81,6 +80,8 @@
                   <object class="GtkMenuItem" id="menuitem2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">_Edit</property>
+                    <property name="use_underline">True</property>
                     <child type="submenu">
                       <object class="GtkMenu" id="menu2">
                         <property name="visible">True</property>
@@ -129,12 +130,16 @@
                   <object class="GtkMenuItem" id="menuitem3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">_View</property>
+                    <property name="use_underline">True</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkMenuItem" id="menuitem4">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">_Help</property>
+                    <property name="use_underline">True</property>
                     <child type="submenu">
                       <object class="GtkMenu" id="menu3">
                         <property name="visible">True</property>
@@ -180,6 +185,7 @@
                   <object class="GtkEntry" id="txt_gene1">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="progress_pulse_step">0.10999999977648259</property>
                     <property name="placeholder_text" translatable="yes">first gene</property>
                   </object>
                   <packing>
@@ -210,6 +216,7 @@
                     <property name="can_focus">True</property>
                     <property name="text" translatable="yes">0,00</property>
                     <property name="input_purpose">number</property>
+                    <property name="adjustment">sp_frecuency_adjustment</property>
                     <property name="digits">2</property>
                     <property name="numeric">True</property>
                   </object>
@@ -328,6 +335,7 @@
                 <property name="vexpand">True</property>
                 <property name="vscrollbar_policy">always</property>
                 <property name="shadow_type">in</property>
+                <signal name="key-press-event" handler="on_key_press_event" swapped="no"/>
                 <child>
                   <object class="GtkViewport" id="viewport1">
                     <property name="visible">True</property>
@@ -338,6 +346,7 @@
                       <object class="GtkDrawingArea" id="drawingarea">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <signal name="draw" handler="draw_cb" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -363,6 +372,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_button_zoomReset_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -377,6 +387,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_button_zoomIn_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -391,6 +402,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_button_zoomOut_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -402,6 +414,93 @@
               <packing>
                 <property name="left_attach">0</property>
                 <property name="top_attach">0</property>
+                <property name="width">1</property>
+                <property name="height">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkGrid" id="grid2">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkButton" id="btn_up">
+                    <property name="label" translatable="yes">Move Up</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_up_event" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="btn_left">
+                    <property name="label" translatable="yes">Move Left</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_left_event" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="btn_down">
+                    <property name="label" translatable="yes">Move Down</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_down_event" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="btn_right">
+                    <property name="label" translatable="yes">Move Right</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_right_event" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
                 <property name="width">1</property>
                 <property name="height">1</property>
               </packing>

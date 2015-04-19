@@ -40,32 +40,23 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkImageMenuItem" id="btnmi_save">
-                            <property name="label">gtk-new</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="use_underline">True</property>
-                            <property name="use_stock">True</property>
-                            <signal name="activate" handler="btnmi_save_activate_cb" swapped="no"/>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkImageMenuItem" id="btnmi_open">
+                          <object class="GtkImageMenuItem" id="mbtn_open">
                             <property name="label">gtk-open</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
-                            <signal name="activate" handler="btnmi_open_activate_cb" swapped="no"/>
+                            <signal name="activate" handler="mbtn_open_activate_cb" swapped="no"/>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkImageMenuItem" id="imagemenuitem3">
+                          <object class="GtkImageMenuItem" id="mbtn_save">
                             <property name="label">gtk-save</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="use_underline">True</property>
                             <property name="use_stock">True</property>
+                            <signal name="activate" handler="mbtn_save_activate_cb" swapped="no"/>
                           </object>
                         </child>
                         <child>
@@ -171,7 +162,7 @@
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>

@@ -36,8 +36,8 @@ struct _ChData {
   GtkWidget *txt_gene1;
   GtkWidget *txt_gene2;
   GtkWidget *sp_frecuency;
-  GtkWidget *btnmi_save;
-  GtkWidget *btnmi_open;
+  GtkWidget *mbtn_save;
+  GtkWidget *mbtn_open;
   GenMatrix *matrix;
   GtkWidget *drawingarea;
   GtkWidget *btn_zoomReset;
@@ -47,6 +47,7 @@ struct _ChData {
 	GtkWidget *btn_down;
 	GtkWidget *btn_left;
 	GtkWidget *btn_right;
+  GtkWidget *statusbar1;
 };
 
 
