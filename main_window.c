@@ -1,6 +1,75 @@
+#include <gtk/gtk.h>
+#include <cairo.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "support.h"
 
-#define UI_FILE "main_window.glade"
+#define UI_FILE "new_main.glade"
+
+
+//static void draw_rectangle(cairo_t *, float xpos, float ypos, float size, const char* name, Color genColor);
+void FillChromosomes()
+{
+    int i = 0;
+    for  (i = 0; i < 100; i++)
+    {
+        char str[12];
+        int rnd = 20 + (rand() % 30);
+        float double_rnd = (float)rnd/100.0f;
+        sprintf(str, "gen%d %1.2f", i, double_rnd);
+
+        GeneData temp;
+        strcpy(temp.name, str);
+        temp.distance = rnd;
+        temp.color = getColor();
+        genes[i] = temp;
+    }
+
+}
+
+void CreateDrawWindow()
+{
+    DrData *data;
+    GtkBuilder *builder;
+    GError     *error = NULL;
+    /* Create new GtkBuilder object */
+    builder = gtk_builder_new();
+    /* Load UI from file. If error occurs, report it and quit application.
+     * Replace "tut.glade" with your saved project. */
+    if( ! gtk_builder_add_from_file( builder, "drawing_window.glade", &error ) )
+    {
+        g_warning( "%s", error->message );
+        g_free( error );
+        return;
+    }
+
+    data = g_slice_new(DrData);
+
+#define GW(name) CH_GET_WIDGET(builder, name, data)
+    //GW(result_window);
+    GW(drawingarea);
+    GW(btn_zoomReset);
+    GW(btn_zoomIn);
+    GW(btn_zoomOut);
+#undef GW
+
+    /* Connect signals */
+    gtk_builder_connect_signals( builder, data );
+
+    /* Destroy builder, since we don't need it anymore */
+    g_object_unref( G_OBJECT( builder ) );
+
+	
+    /* Show window. All other widgets are automatically shown by GtkBuilder */
+    //gtk_widget_show( data->result_window );
+
+    /* Start main loop */
+    //gtk_main();
+
+    g_slice_free(DrData, data);
+}
 
 void create_list(ChData *data) {
   GtkListStore *list_store;
@@ -24,6 +93,9 @@ int main(int argc, char *argv[]) {
     g_free(error);
     return(1);
   }
+
+	FillChromosomes();
+    CreateDrawWindow();
 
   data = g_slice_new(ChData);
   data->matrix = g_slice_new(GenMatrix);

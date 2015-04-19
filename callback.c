@@ -292,37 +292,127 @@ void btn_open_clicked_cb(GtkButton *button, ChData *data) {
 
 }
 
-//void btnmi_open_activate_cb(GtkButton *button, ChData *app) {
-//  read_values_from_file("new_values.bmc");
-//
-//  g_print("elements %d\n", app->tree_view);
-//  //GtkTreeModel *model;
-//  //GtkListStore *list_store;
-//  //GtkTreeIter iter;
-//  //GtkTreeView *tree_view;
-//
-//  //double inserted_values[255][255];
-//  //int i,j;
-//
-//  //g_print("elements %d\n", data);
-//  //tree_view = GTK_TREE_VIEW(data->tree_view);
-//  //model = gtk_tree_view_get_model(tree_view);
-//  //list_store = GTK_LIST_STORE(model);
-//  //gtk_list_store_clear(list_store);
-//
-//  //for(i = 0; i< column_array_size; i++) {
-//  //  for(j = 0; j < column_array_size; i++) {
-//  //    if (i != j && inserted_values[i][j] != values[i][j]) {
-//  //      gtk_list_store_append (list_store, &iter);
-//  //      gtk_list_store_set (list_store, &iter,
-//  //        COL_FIRST_GENE, columns_array[i],
-//  //        COL_SECOUND_GENE, columns_array[j],
-//  //        COL_SECOUND_GENE, double_to_string(values[i][j]),
-//  //        -1
-//  //      );
-//  //      inserted_values[i][j] = values[i][j];
-//  //      inserted_values[j][i] = values[j][i];
-//  //    }
-//  //  }
-//  //}
-//}
+/***************************************************************/
+
+float randomFloat()
+{
+      float r = (float)rand() / (float)RAND_MAX;
+      return r;
+}
+
+Color getColor()
+{
+    Color color;
+    color.r = randomFloat();
+    color.g = randomFloat();
+    color.b = randomFloat();
+    return color;
+}
+
+void Refreh(DrData *data)
+{
+    gtk_widget_queue_draw (data->drawingarea);
+}
+
+void on_button_zoomReset_clicked ( GtkButton *button , DrData *data)
+{
+    scale = 1;
+    xtranslate = ytranslate = 0;
+    Refreh(data);
+}
+
+void on_button_zoomIn_clicked ( GtkButton *button , DrData *data)
+{
+    scale += 0.1;
+    Refreh(data);
+}
+
+void on_button_zoomOut_clicked ( GtkButton *button , DrData *data)
+{
+    scale -= 0.1;
+    if (scale < 0)
+        scale = 0.1;
+    Refreh(data);
+}
+
+void on_key_press_event (GtkWidget *widget,
+               GdkEventKey  *event,
+               DrData *data)
+{
+
+    if (event->keyval == GDK_KEY_Left)
+    {
+        xtranslate += SCREEN_MOVE;
+    }
+
+    if (event->keyval == GDK_KEY_Right)
+    {
+       xtranslate -= SCREEN_MOVE;
+    }
+
+    if (event->keyval == GDK_KEY_Up)
+    {
+        ytranslate += SCREEN_MOVE;
+    }
+
+    if (event->keyval == GDK_KEY_Down)
+    {
+        ytranslate -= SCREEN_MOVE;
+    }
+    Refreh(data);
+}
+
+gboolean draw_cb (GtkWidget *widget, GdkEventExpose *event)
+{
+    cairo_t *cr;
+    cr = gdk_cairo_create (gtk_widget_get_window (widget));
+    cairo_scale(cr, scale, scale);
+    cairo_translate(cr, xtranslate, ytranslate);
+    int i, x, y;
+    x = 30;
+    y = 20;
+    for (i = 1; i < 100; i++)
+    {
+        //char str[5];
+        //sprintf(str, "Gen%d", i);
+        //int rnd = 20 + (rand() % 30);
+        int rnd = genes[i].distance;
+
+        draw_rectangle(cr, x, y, rnd, genes[i].name, genes[i].color);
+        y = y + rnd;
+
+        if (y > 700*(2-scale))
+        {
+            y = 20;
+            x = x + 140;
+        }
+    }
+
+    return FALSE;
+}
+
+static void draw_rectangle(cairo_t *cr, float xpos, float ypos, float size, const char* name, Color genColor)
+{
+
+    cairo_set_source_rgb(cr, genColor.r, genColor.g, genColor.b);
+    cairo_set_line_width(cr, 1);
+
+    cairo_rectangle(cr, xpos, ypos, 10, size);
+    cairo_stroke_preserve(cr);
+    cairo_fill(cr);
+
+    cairo_set_source_rgb(cr, 0, 0, 0);
+    cairo_move_to(cr, xpos-10, ypos);
+    cairo_line_to(cr, xpos+20, ypos);
+    cairo_stroke(cr);
+
+    cairo_set_source_rgb(cr, 0, 0, 0);
+    cairo_select_font_face(cr, "Courier",
+    CAIRO_FONT_SLANT_NORMAL,
+    CAIRO_FONT_WEIGHT_BOLD);
+
+    cairo_set_font_size(cr, 11);
+
+    cairo_move_to(cr, xpos+30, ypos+5);
+    cairo_show_text(cr, name);
+}
