@@ -43,36 +43,6 @@ void init_columns_array() {
   }
 }
 
-void load_list(ChData *data) {
-  GtkTreeModel *model;
-  GtkTreeView *tree_view;
-  GtkListStore *list_store;
-  GtkTreeIter iter;
-  double inserted_values[255][255];
-  int i,j;
-
-  //tree_view = GTK_TREE_VIEW(data->tree_view);
-  //model = gtk_tree_view_get_model(tree_view);
-  //list_store = GTK_LIST_STORE(model);
-  //gtk_list_store_clear(list_store);
-
-  //for(i = 0; i< column_array_size; i++) {
-  //  for(j = 0; j < column_array_size; i++) {
-  //    if (i != j && inserted_values[i][j] != values[i][j]) {
-  //      gtk_list_store_append (list_store, &iter);
-  //      gtk_list_store_set (list_store, &iter,
-  //        COL_FIRST_GENE, columns_array[i],
-  //        COL_SECOUND_GENE, columns_array[j],
-  //        COL_SECOUND_GENE, double_to_string(values[i][j]),
-  //        -1
-  //      );
-  //      inserted_values[i][j] = values[i][j];
-  //      inserted_values[j][i] = values[j][i];
-  //    }
-  //  }
-  //}
-}
-
 void read_values_from_file(char file_name[]) {
   char file_data[1024*6] = "";
   int index = 0;
@@ -113,12 +83,10 @@ void read_values_from_file(char file_name[]) {
 
       if (file_data[index] == '|') {
         char cell[255] = "";
-        double cell_value = 0.0;
         current_column++;
         finish_string_index = index - init_string_index;
         strncpy(cell, file_data+init_string_index, finish_string_index);
         init_string_index = index + 1;
-        cell_value = atof(cell);
         values[current_row - 1][current_column - 1] = atof(cell);
         matrix_size++;
       }
@@ -164,9 +132,9 @@ char *matrix_to_string() {
       if (j == i) {
         strcat(file_string, "-1");
       } else {
-        char double_value[4];
-        strcpy(double_value, double_to_string(values[i][j]));
-        strcat(file_string, double_value);
+        // char double_value[32];
+        sprintf(file_string, "%s%f", file_string, values[i][j]);
+        // strcat(file_string, double_to_string();
       }
       strcat(file_string, "|");
     }
@@ -208,9 +176,12 @@ void include_new_row(ChData *data) {
 
   const char *gene1, *gene2;
   double frecuency_value;
-  int column_count, gene1_column_index, gene2_column_index;
+  int gene1_column_index, gene2_column_index;
   double frecuency_value_in_array = 0.00;
-  int frecuency_already_added = -1;
+
+  if (column_array_size == 0){
+    init_matrix();
+  }
 
   gene1 = gtk_entry_get_text(GTK_ENTRY(data->txt_gene1));
   gene2 = gtk_entry_get_text(GTK_ENTRY(data->txt_gene2));
@@ -250,49 +221,112 @@ void include_new_row(ChData *data) {
         COL_FIRST_GENE, gene1,
         COL_SECOUND_GENE, gene2,
         COL_FRECUENCY, frecuency_value, -1);
-    }
+  }
+}
+
+void on_generate_clicked(GtkButton *button, ChData *data) {
+	g_print("generating");
+	printMatrix_double(values, column_array_size);
+	create_all_maps(values, column_array_size);
 }
 
 void btn_add_clicked(GtkButton *button, ChData *data) {
+  guint context_id;
+  GtkStatusbar *status_bar;
+
+  status_bar = GTK_STATUSBAR(data->statusbar1);
+  context_id = gtk_statusbar_get_context_id(status_bar, "GENES:");
   include_new_row(data);
+
+  gtk_statusbar_remove_all(status_bar, context_id);
+  gtk_statusbar_push(status_bar, context_id, "FRECUENCY ADDED");
 }
 
-void btnmi_save_activate_cb(char *data) {
-  write_matrix_file("new_values.bmc");
+void btn_save_clicked_cb(GtkButton *button, ChData *user_data) {
+  guint context_id;
+  GtkStatusbar *status_bar;
+  GtkWidget *dialog;
+  GtkWindow *window;
+
+  status_bar = GTK_STATUSBAR(user_data->statusbar1);
+  window = GTK_WINDOW(user_data->main_window);
+  context_id = gtk_statusbar_get_context_id(status_bar, "GENES:");
+  gint res;
+
+  dialog = gtk_file_chooser_dialog_new ("Save File", window, GTK_FILE_CHOOSER_ACTION_SAVE,
+    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, NULL);
+
+  res = gtk_dialog_run (GTK_DIALOG (dialog));
+  if (res == GTK_RESPONSE_ACCEPT)
+  {
+    char *filename;
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+    filename = gtk_file_chooser_get_filename (chooser);
+    strcat(filename, ".bmc");
+    write_matrix_file(filename);
+    g_print("BMC CONSOLE OUTPUT : FILE SAVED %s\n", filename);
+    gtk_statusbar_remove_all(status_bar, context_id);
+    gtk_statusbar_push(status_bar, context_id, "FILE SAVED");
+  }
+
+  gtk_widget_destroy (dialog);
 }
 
-void btnmi_open_activate_cb(GtkButton *button, ChData *app) {
-  read_values_from_file("new_values.bmc");
+void btn_open_clicked_cb(GtkButton *button, ChData *app) {
+  gint res;
+  GtkWindow *window;
+  GtkWidget *dialog;
 
-  g_print("elements %d\n", app->id);
-  //GtkTreeModel *model;
-  //GtkListStore *list_store;
-  //GtkTreeIter iter;
-  //GtkTreeView *tree_view;
+  window = GTK_WINDOW(app->main_window);
+  dialog = gtk_file_chooser_dialog_new ("Open File", window, GTK_FILE_CHOOSER_ACTION_OPEN,
+    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
 
-  //double inserted_values[255][255];
-  //int i,j;
-  //g_print("elements %d\n", data);
-  //tree_view = GTK_TREE_VIEW(data->tree_view);
-  //model = gtk_tree_view_get_model(tree_view);
-  //list_store = GTK_LIST_STORE(model);
-  //gtk_list_store_clear(list_store);
+  res = gtk_dialog_run (GTK_DIALOG (dialog));
+  res = gtk_dialog_run (GTK_DIALOG (dialog));
+  if (res == GTK_RESPONSE_ACCEPT)
+  {
+    char *filename;
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
+    filename = gtk_file_chooser_get_filename (chooser);
+    read_values_from_file(filename);
+    g_print("BMC CONSOLE OUTPUT : FILE OPENED %s\n", filename);
+    GtkTreeModel *model;
+    GtkListStore *list_store;
+    GtkTreeIter iter;
+    GtkTreeView *tree_view;
+    guint context_id;
+    GtkStatusbar *status_bar;
 
-  //for(i = 0; i< column_array_size; i++) {
-  //  for(j = 0; j < column_array_size; i++) {
-  //    if (i != j && inserted_values[i][j] != values[i][j]) {
-  //      gtk_list_store_append (list_store, &iter);
-  //      gtk_list_store_set (list_store, &iter,
-  //        COL_FIRST_GENE, columns_array[i],
-  //        COL_SECOUND_GENE, columns_array[j],
-  //        COL_SECOUND_GENE, double_to_string(values[i][j]),
-  //        -1
-  //      );
-  //      inserted_values[i][j] = values[i][j];
-  //      inserted_values[j][i] = values[j][i];
-  //    }
-  //  }
-  //}
+    double inserted_values[255][255];
+    int i,j;
+    status_bar = GTK_STATUSBAR(app->statusbar1);
+    context_id = gtk_statusbar_get_context_id(status_bar, "GENES:");
+    tree_view = GTK_TREE_VIEW(app->tree_view);
+    model = gtk_tree_view_get_model(tree_view);
+    list_store = GTK_LIST_STORE(model);
+    gtk_list_store_clear(list_store);
+
+    for(i = 0; i< column_array_size; i++) {
+     for(j = 0; j < column_array_size; j++) {
+       if (i != j && inserted_values[i][j] != values[j][i] && values[i][j] > 0) {
+         gtk_list_store_append (list_store, &iter);
+         gtk_list_store_set (list_store, &iter,
+           COL_FIRST_GENE, columns_array[i],
+           COL_SECOUND_GENE, columns_array[j],
+           COL_FRECUENCY, values[i][j],
+           -1
+         );
+         inserted_values[i][j] = values[i][j];
+         inserted_values[j][i] = values[j][i];
+       }
+     }
+    }
+    gtk_statusbar_remove_all(status_bar, context_id);
+    gtk_statusbar_push(status_bar, context_id, "FILE OPENED");
+    g_free (filename);
+  }
+
+  gtk_widget_destroy (dialog);
 }
 
 /***************************************************************/

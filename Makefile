@@ -19,4 +19,4 @@ callback.o: callback.c support.h
 	$(CC) $(DEBUG) $(CFLAG) -c $< -o $@
 
 clean:
-	rm -f *.o main_window .*.c.swm .*.c.swn .*.h.swn *.bmc .*.h.swo .*.h.swp .*.c.swp
+	rm -f *.o main_window .*.c.swm .*.c.swn .*.h.swn .*.h.swo .*.h.swp .*.c.swp

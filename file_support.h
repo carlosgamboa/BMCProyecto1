@@ -3,19 +3,23 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #define BUFFER_SIZE 1024
 
 char *get_file_data(char file_location[]) {
-  static char buffer[BUFFER_SIZE];
+  char buffer[BUFFER_SIZE] = "";
   FILE *fileptr;
 
-  fileptr = fopen(file_location,"r");
-  fread(buffer, BUFFER_SIZE, 1, fileptr);
+  if(access(file_location, F_OK) != -1) {
+    fileptr = fopen(file_location, "r");
+    fread(buffer, BUFFER_SIZE, 1, fileptr);
 
-  fclose(fileptr);
-
-  return buffer;
+    fclose(fileptr);
+    return buffer;
+  } else {
+    return "";
+  }
 }
 
 int write_file(char file_data[], char file_location[]) {
@@ -36,7 +40,7 @@ int write_file(char file_data[], char file_location[]) {
 
 char *double_to_string(double value) {
   char string[4];
-  sprintf(string, "%f", value); 
+  sprintf(string, "%f", value);
   return string;
 }
 
