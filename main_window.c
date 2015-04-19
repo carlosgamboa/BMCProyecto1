@@ -8,7 +8,6 @@
 
 #define UI_FILE "new_main.glade"
 
-
 //static void draw_rectangle(cairo_t *, float xpos, float ypos, float size, const char* name, Color genColor);
 void FillChromosomes()
 {
@@ -61,7 +60,7 @@ void CreateDrawWindow()
     /* Destroy builder, since we don't need it anymore */
     g_object_unref( G_OBJECT( builder ) );
 
-	
+
     /* Show window. All other widgets are automatically shown by GtkBuilder */
     //gtk_widget_show( data->result_window );
 
@@ -78,6 +77,7 @@ void create_list(ChData *data) {
 
   gtk_tree_view_set_model(GTK_TREE_VIEW(data->tree_view), GTK_TREE_MODEL(list_store));
 }
+
 
 int main(int argc, char *argv[]) {
 
@@ -114,14 +114,14 @@ int main(int argc, char *argv[]) {
   GW(btnmi_open);
 #undef GW
 
-  gtk_builder_connect_signals(builder, data); 
+  gtk_builder_connect_signals(builder, data);
   g_object_unref(G_OBJECT(builder));
 
   gtk_widget_show(data->main_window);
   create_list(data);
 
-  gtk_main();
 
+  gtk_main();
   g_slice_free(ChData, data);
 
   return 0;

@@ -15,28 +15,6 @@ int matrix_size = 0;
 char columns_array[255][255];
 double values[255][255];
 
-gboolean foreach_func(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, ChData *data) {
-  gchar *gen1, *gen2, *tree_view_path;
-  guint frecuency;
-
-  gtk_tree_model_get(
-    model,
-    iter,
-    COL_FIRST_GENE, &gen1,
-    COL_SECOUND_GENE, &gen2,
-    COL_FRECUENCY, &frecuency
-  );
-
-  tree_view_path = gtk_tree_path_to_string(path);
-  g_print("Row %s: gen1 %s - gen2 %s, frecuency %i\n", tree_view_path, gen1 , gen2, frecuency);
-
-  g_free(tree_view_path);
-  g_free(gen1);
-  g_free(gen2);
-
-  return FALSE;
-}
-
 void init_matrix() {
   int i,j;
   matrix_size = 0;
@@ -263,33 +241,48 @@ void include_new_row(ChData *data) {
         COL_SECOUND_GENE, gene2,
         COL_FRECUENCY, frecuency_value, -1);
     }
-  //write_file(columns_to_string(columns_array), "new_value.bmc");
-  //write_file(matrix_to_string(), "new_value.bmc");
-  //write_matrix_in_file("new_value.txt", columns_array, values, column_array_size);
 }
 
 void btn_add_clicked(GtkButton *button, ChData *data) {
-  //GtkTreeModel *model;
-
-  //model = gtk_tree_view_get_model(GTK_TREE_VIEW(data->tree_view));
-
-  //gtk_tree_model_foreach(model, (GtkTreeModelForeachFunc)foreach_func, NULL);
   include_new_row(data);
 }
 
-//void btnmi_save_activate_cb(char *data) {
-//  write_matrix_file("new_values.bmc");
-//}
-
-void btn_save_clicked_cb(GtkButton *button, ChData *data) {
+void btnmi_save_activate_cb(char *data) {
   write_matrix_file("new_values.bmc");
 }
 
-void btn_open_clicked_cb(GtkButton *button, ChData *data) {
+void btnmi_open_activate_cb(GtkButton *button, ChData *app) {
   read_values_from_file("new_values.bmc");
 
-  g_print("elements %d\n", data->id)k
+  g_print("elements %d\n", app->id);
+  //GtkTreeModel *model;
+  //GtkListStore *list_store;
+  //GtkTreeIter iter;
+  //GtkTreeView *tree_view;
 
+  //double inserted_values[255][255];
+  //int i,j;
+  //g_print("elements %d\n", data);
+  //tree_view = GTK_TREE_VIEW(data->tree_view);
+  //model = gtk_tree_view_get_model(tree_view);
+  //list_store = GTK_LIST_STORE(model);
+  //gtk_list_store_clear(list_store);
+
+  //for(i = 0; i< column_array_size; i++) {
+  //  for(j = 0; j < column_array_size; i++) {
+  //    if (i != j && inserted_values[i][j] != values[i][j]) {
+  //      gtk_list_store_append (list_store, &iter);
+  //      gtk_list_store_set (list_store, &iter,
+  //        COL_FIRST_GENE, columns_array[i],
+  //        COL_SECOUND_GENE, columns_array[j],
+  //        COL_SECOUND_GENE, double_to_string(values[i][j]),
+  //        -1
+  //      );
+  //      inserted_values[i][j] = values[i][j];
+  //      inserted_values[j][i] = values[j][i];
+  //    }
+  //  }
+  //}
 }
 
 /***************************************************************/

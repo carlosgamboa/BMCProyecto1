@@ -51,7 +51,6 @@
                 <property name="xalign">0.49000000953674316</property>
                 <property name="yalign">0.51999998092651367</property>
                 <property name="always_show_image">True</property>
-                <signal name="clicked" handler="btn_open_clicked_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
