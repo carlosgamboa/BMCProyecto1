@@ -95,6 +95,7 @@ int findFirst(double m[SIZE][SIZE],int nodos)
 	return 1;	
 }
 
+
 /*
  * Busca el nodo mas sercano al gen
  * Elimina la columna donde se encuentra para que no se vuelva a evaluar.
