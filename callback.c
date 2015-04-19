@@ -241,6 +241,7 @@ void setColors()
 		{
 			colors[i][j] = getColor();
 		}
+		j = 0;
 	}
 }
 
@@ -477,7 +478,10 @@ gboolean draw_cb (GtkWidget *widget, GdkEventExpose *event)
 				draw_rectangle(cr, x, y, size, final, colors[i][j]);
 			}
 			else 
+			{
+				j = 0;
 				break;
+			}
 
 			y = y + size;
 		}
