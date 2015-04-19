@@ -217,9 +217,9 @@ void makePath(double values[SIZE][SIZE],double c[SIZE][SIZE],int p[SIZE][SIZE],d
 		{
 			printf("next %d \n",next);
 			
+			c[T_step][mT]=values[row_path][next];
 			mT++;
 			p[T_step][mT]=next;
-			c[T_step][mT]=values[row_path][next];
 			
 			row_path = next;
 			
@@ -276,7 +276,7 @@ void printMatrix_double(double m[SIZE][SIZE],int nodos)
 	 printf("MATRIX:\n");
 	for(i=0;i<nodos;i++)
 	{
-	  printf("%d  ",i);	
+	  printf("%d : ",i);	
       for(j=0;j<nodos;j++)
       {
 		printf("%f     ", m[i][j] );
@@ -292,7 +292,7 @@ void printMatrix_int(int p[SIZE][SIZE],int nodos)
 	 printf("\n");
 	for(i=0;i<nodos;i++)
 	{
-	  printf("%d  ",i);	
+	  printf("%d : ",i);	
       for(j=0;j<nodos;j++)
       {
 		printf("%d     ", p[i][j] );
