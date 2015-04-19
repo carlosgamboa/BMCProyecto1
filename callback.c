@@ -10,10 +10,19 @@ enum {
   N_COLUMNS
 };
 
+#define SCREEN_MOVE 10
+
+float scale = 1.0;
+float xtranslate, ytranslate = 0;
+GeneData genes[100];
+
 int column_array_size = 0;
 int matrix_size = 0;
 char columns_array[255][255];
 double values[255][255];
+
+//Declarations
+static void draw_rectangle(cairo_t *cr, float xpos, float ypos, float size, const char* name, Color genColor);
 
 void init_matrix() {
   int i,j;
@@ -408,4 +417,23 @@ static void draw_rectangle(cairo_t *cr, float xpos, float ypos, float size, cons
 
     cairo_move_to(cr, xpos+30, ypos+5);
     cairo_show_text(cr, name);
+}
+
+void FillChromosomes()
+{
+    int i = 0;
+    for  (i = 0; i < 100; i++)
+    {
+        char str[12];
+        int rnd = 20 + (rand() % 30);
+        float double_rnd = (float)rnd/100.0f;
+        sprintf(str, "gen%d %1.2f", i, double_rnd);
+
+        GeneData temp;
+        strcpy(temp.name, str);
+        temp.distance = rnd;
+        temp.color = getColor();
+        genes[i] = temp;
+    }
+
 }

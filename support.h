@@ -66,11 +66,5 @@ struct _GeneData {
     Color color;
 };
 
-
-#define SCREEN_MOVE 10
-float scale = 1.0;
-float xtranslate, ytranslate = 0;
-GeneData genes[100];
-
 #endif
 
