@@ -43,6 +43,7 @@ int havePaths(double m[SIZE][SIZE],int nodos);
 void getMutltipleMaps(double values[SIZE][SIZE],double c[SIZE][SIZE],double m[SIZE][SIZE],int nodos);
 void fill_Matrix(double values[SIZE][SIZE],int nodos);
 void create_all_maps(double values[SIZE][SIZE],int nodos);
+int hasMore(double values[SIZE][SIZE],double m[SIZE][SIZE],int nodos);
 
 int init_allMatrix()
 {
@@ -243,14 +244,40 @@ void deleteFistC(double m[SIZE][SIZE], int c,int nodos)
 		m[i][c]=-1;//elimino la columna init
 	
 }
+
+int hasMore(double values[SIZE][SIZE],double m[SIZE][SIZE],int nodos)
+{
+	int r,c;
+	int has_more=0;
+	for (r=0;r<nodos;r++)
+	{
+		for(c=0;c<nodos;c++)
+		{
+			if (m[r][c]!=-1)
+			{
+				m[r][c]=values[r][c];
+				has_more=1;
+			}
+		}
+	}
+	
+	return has_more;
+}
  
 
 void getMutltipleMaps(double values[SIZE][SIZE],double c[SIZE][SIZE],double m[SIZE][SIZE],int nodos)
 {
 	int T_step = 0;
+	int is_check=0;
 	
 	while (T_step<nodos)
 	{
+		is_check=hasMore(values,m,nodos);
+		if (is_check==1)
+			maximo=-1;
+		else
+			break;
+			
 		findFirst(m,nodos);
 		printf("1.[%d ---> %d]---=%f\n",first,last,maximo);
 		deleteFistC(m,first,nodos);
