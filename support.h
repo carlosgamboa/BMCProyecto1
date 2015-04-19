@@ -48,6 +48,7 @@ struct _ChData {
 	GtkWidget *btn_left;
 	GtkWidget *btn_right;
   GtkWidget *statusbar1;
+	GtkWidget *btn_generate;
 };
 
 

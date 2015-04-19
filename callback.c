@@ -224,6 +224,12 @@ void include_new_row(ChData *data) {
     }
 }
 
+void on_generate_clicked(GtkButton *button, ChData *data) {
+	g_print("generating");
+	printMatrix_double(values, column_array_size);
+	create_all_maps(values, column_array_size);
+}
+
 void btn_add_clicked(GtkButton *button, ChData *data) {
   guint context_id;
   GtkStatusbar *status_bar;
