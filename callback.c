@@ -132,9 +132,9 @@ char *matrix_to_string() {
       if (j == i) {
         strcat(file_string, "-1");
       } else {
-        char double_value[4];
-        strcpy(double_value, double_to_string(values[i][j]));
-        strcat(file_string, double_value);
+        // char double_value[32];
+        sprintf(file_string, "%s%f", file_string, values[i][j]);
+        // strcat(file_string, double_to_string();
       }
       strcat(file_string, "|");
     }
@@ -221,7 +221,7 @@ void include_new_row(ChData *data) {
         COL_FIRST_GENE, gene1,
         COL_SECOUND_GENE, gene2,
         COL_FRECUENCY, frecuency_value, -1);
-    }
+  }
 }
 
 void btn_add_clicked(GtkButton *button, ChData *data) {
@@ -261,7 +261,6 @@ void btn_save_clicked_cb(GtkButton *button, ChData *user_data) {
     g_print("BMC CONSOLE OUTPUT : FILE SAVED %s\n", filename);
     gtk_statusbar_remove_all(status_bar, context_id);
     gtk_statusbar_push(status_bar, context_id, "FILE SAVED");
-    g_free (filename);
   }
 
   gtk_widget_destroy (dialog);
@@ -303,7 +302,7 @@ void btn_open_clicked_cb(GtkButton *button, ChData *app) {
 
     for(i = 0; i< column_array_size; i++) {
      for(j = 0; j < column_array_size; j++) {
-       if (i != j && inserted_values[i][j] != values[j][i]) {
+       if (i != j && inserted_values[i][j] != values[j][i] && values[i][j] > 0) {
          gtk_list_store_append (list_store, &iter);
          gtk_list_store_set (list_store, &iter,
            COL_FIRST_GENE, columns_array[i],
