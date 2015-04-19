@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
 	GW(btn_left);
 	GW(btn_right);
   GW(statusbar1);
+	GW(btn_generate);
 #undef GW
 
   gtk_builder_connect_signals(builder, data);
