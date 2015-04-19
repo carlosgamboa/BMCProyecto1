@@ -60,9 +60,9 @@ int init_allMatrix()
 void fill_Matrix(double values[SIZE][SIZE],int nodos)
 {
   int c,r;
- for(r=0;r<nodos;r++)
+ for(r=0;r<SIZE;r++)
  {
-   for(c=0;c<nodos-1;c++)
+   for(c=0;c<SIZE-1;c++)
    {
 	   matrix[r][c]=values[r][c];
    }
@@ -189,11 +189,17 @@ void makePath(double values[SIZE][SIZE],double c[SIZE][SIZE],int p[SIZE][SIZE],d
 	double min_r;
 	int mT=0;
 	p[T_step][mT]=row_path;
+	printf("inicia Path [%d][%d] =%d\n",T_step,mT,row_path);
 	while(1==1)
-	{
+	{	
+		
+		printf("\n");
+		printf("Valores: de [%d ---> %d]\n",first,last);
+		printMatrix_double(m,nodos);
+			
 		//busca el proximo
 		next=findNext(m,row_path,nodos);
-		printf("FindNexnext %d \n",next);
+		
 		if (next==-1)
 		{
 			//if (next==-1) no encontro el proximo
@@ -202,7 +208,7 @@ void makePath(double values[SIZE][SIZE],double c[SIZE][SIZE],int p[SIZE][SIZE],d
 			if (min_r!=GHOST)
 			{	
 				remainRow(m,row_path,nodos,min_r);
-				makeZeroRows(matrix,nodos);
+				makeZeroRows(m,nodos);
 			}	
 			else
 				break;
@@ -216,6 +222,11 @@ void makePath(double values[SIZE][SIZE],double c[SIZE][SIZE],int p[SIZE][SIZE],d
 			c[T_step][mT]=values[row_path][next];
 			
 			row_path = next;
+			
+			printf("\n");
+			printf("--------------MATRIX DE PATHS------------\n");
+			printMatrix_int(p,nodos);
+		
 		}
 	}	
 }
@@ -241,17 +252,19 @@ void getMutltipleMaps(double values[SIZE][SIZE],double c[SIZE][SIZE],double m[SI
 	while (T_step<nodos)
 	{
 		findFirst(m,nodos);
-		printf("m[%d][%d]=%f\n",first,last,maximo);
+		printf("1.[%d ---> %d]---=%f\n",first,last,maximo);
 		deleteFistC(m,first,nodos);
+		
+		printf("2.Borra la columna\n");
+		printMatrix_double(m,nodos);
+		
+		
+		printf("3.make zeros\n");
 		makeZeroRows(m,nodos);
 		
+		printf("4.path\n");
 		makePath(values,c,path,m,first,T_step,nodos);
 		T_step++;
-		
-		printf("\n");
-		printf("--------------MATRIX DE PATHS------------\n");
-		printf("--------------- [%d ---> %d]--------------\n",first,last);
-		printMatrix_double(matrix,nodos);
 	}
 	
 }
@@ -260,8 +273,7 @@ void getMutltipleMaps(double values[SIZE][SIZE],double c[SIZE][SIZE],double m[SI
 void printMatrix_double(double m[SIZE][SIZE],int nodos)
 {
 	int i,j;
-	printf("----------------------------------------\n");
-	printf("    0      1       2       3       4\n");
+	 printf("MATRIX:\n");
 	for(i=0;i<nodos;i++)
 	{
 	  printf("%d  ",i);	
@@ -271,14 +283,13 @@ void printMatrix_double(double m[SIZE][SIZE],int nodos)
 	  }	 
 	  printf("\n");
 	}  
-	printf("----------------------------------------\n");
+	 printf("\n");
 }
 
 void printMatrix_int(int p[SIZE][SIZE],int nodos)
 {
 	int i,j;
-	printf("----------------------------------------\n");
-	printf("    0      1       2       3       4\n");
+	 printf("\n");
 	for(i=0;i<nodos;i++)
 	{
 	  printf("%d  ",i);	
@@ -288,7 +299,7 @@ void printMatrix_int(int p[SIZE][SIZE],int nodos)
 	  }	 
 	  printf("\n");
 	}  
-	printf("----------------------------------------\n");
+	 printf("\n");
 }
 
 void create_all_maps(double values[SIZE][SIZE],int nodos)
@@ -296,10 +307,16 @@ void create_all_maps(double values[SIZE][SIZE],int nodos)
 	init_allMatrix();
 	fill_Matrix(values,nodos);
 	
-	printf("\n");
-	printf("--------------MATRIX DE PATHS------------\n");
+	//print
+	printMatrix_double(matrix,nodos);
+	
 	getMutltipleMaps(values,cost,matrix,nodos);
+	
+   printf("\n");
+   printf("--------------MATRIX DE PATHS------------\n");
+   printMatrix_int(path,nodos);
 }
+
 
 #endif
 
