@@ -38,6 +38,8 @@ int main(int argc, char *argv[]) {
   GW(txt_gene1);
   GW(txt_gene2);
   GW(sp_frecuency);
+  GW(btnmi_save);
+  GW(btnmi_open);
 #undef GW
 
   gtk_builder_connect_signals(builder, data); 

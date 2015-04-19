@@ -9,6 +9,7 @@
 #define CH_GET_WIDGET(builder, name, data) \
   CH_GET_OBJECT(builder, name, GTK_WIDGET, data)
 
+#define ARRAY_SIZE(a) ROWS_NUM(a)
 #define ROWS_NUM(a) (sizeof(a) / sizeof(a[0]))
 #define COL_NUM(a) (sizeof(a[0]) / sizeof(a[0][0]))
 
@@ -34,6 +35,8 @@ struct _ChData {
   GtkWidget *txt_gene1;
   GtkWidget *txt_gene2;
   GtkWidget *sp_frecuency;
+  GtkWidget *btnmi_save;
+  GtkWidget *btnmi_open;
   GenMatrix *matrix;
 };
 
