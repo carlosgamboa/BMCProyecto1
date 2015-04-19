@@ -45,6 +45,7 @@ void fill_Matrix(double values[SIZE][SIZE],int nodos);
 void create_all_maps(double values[SIZE][SIZE],int nodos);
 int hasMore(double values[SIZE][SIZE],double m[SIZE][SIZE],int nodos);
 
+
 int init_allMatrix()
 {
  int i,j;
