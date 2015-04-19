@@ -21,9 +21,14 @@ int column_array_size = 0;
 int matrix_size = 0;
 char columns_array[255][255];
 double values[255][255];
+Color colors[255][255];
+int draw = 0;
+
 
 //Declarations
 static void draw_rectangle(cairo_t *cr, float xpos, float ypos, float size, const char* name, Color genColor);
+void setColors();
+Color getColor();
 
 void init_matrix() {
   int i,j;
@@ -224,10 +229,28 @@ void include_new_row(ChData *data) {
   }
 }
 
+void setColors()
+{
+	int i, j = 0;
+	for (i = 0; i < column_array_size; i++)
+	{
+		if(path[i][j] == -1)
+			break;
+
+		for (j = 0; j < column_array_size; j++)
+		{
+			colors[i][j] = getColor();
+		}
+	}
+}
+
 void on_generate_clicked(GtkButton *button, ChData *data) {
 	g_print("generating");
 	printMatrix_double(values, column_array_size);
 	create_all_maps(values, column_array_size);
+	draw = 1;
+	setColors();
+	Refreh (data);
 }
 
 void btn_add_clicked(GtkButton *button, ChData *data) {
@@ -402,9 +425,11 @@ gboolean draw_cb (GtkWidget *widget, GdkEventExpose *event)
     cr = gdk_cairo_create (gtk_widget_get_window (widget));
     cairo_scale(cr, scale, scale);
     cairo_translate(cr, xtranslate, ytranslate);
-    int i, x, y;
+    int x, y;
     x = 30;
     y = 20;
+
+	/*
     for (i = 1; i < 100; i++)
     {
         //char str[5];
@@ -420,8 +445,51 @@ gboolean draw_cb (GtkWidget *widget, GdkEventExpose *event)
             y = 20;
             x = x + 140;
         }
-    }
+    }*/
 
+	if (draw == 0   )
+		return;
+	
+	//final draw
+	int i, j = 0, size;
+	for (i = 0; i < column_array_size; i++)
+	{
+		if(path[i][j] == -1)
+			break;
+
+		for (j = 0; j < column_array_size; j++)
+		{
+			if(path[i][j] != -1)
+			{
+				char str[5], final[12];
+   				
+				strcpy(str, columns_array[path[i][j]]);
+				size = (int)(cost[i][j] * 1000);
+				if (size < 0)
+					size = 0;
+
+				if (cost[i][j] < 0)
+					sprintf(final, "%s", str);
+				else
+					sprintf(final, "%s %2.2f", str, cost[i][j]);
+				
+				//g_print("%s %d \n", final, size);
+				draw_rectangle(cr, x, y, size, final, colors[i][j]);
+			}
+			else 
+				break;
+
+			y = y + size;
+		}
+
+		y = y + 100;
+		if (y > 700*(2-scale))
+        {
+            y = 20;
+            x = x + 140;
+        }
+	}
+	
     return FALSE;
 }
 

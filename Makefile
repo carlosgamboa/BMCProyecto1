@@ -1,7 +1,7 @@
 CC = gcc
 CFLAG = `pkg-config --cflags gtk+-3.0 gmodule-2.0`
 CFLAG_LIBS = `pkg-config --libs --cflags gtk+-3.0 gmodule-2.0`
-DEBUG = -Wall -g
+DEBUG = -Wall -g -w
 
 OBJECTS = main_window.o callback.o
 
