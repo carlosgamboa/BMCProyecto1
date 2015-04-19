@@ -1,6 +1,6 @@
 #include "support.h"
 #include "file_support.h"
-#include "algortihm.h"
+#include "algorithm.h"
 #include <stdio.h>
 #include <stdlib.h>
 
